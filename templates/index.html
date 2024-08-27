@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MUSIC RECOMMENDATION SYSTEM</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initaial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&family=Yanone+Kaffeesatz:wght@300;400&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/musicp.css' %}">
+</head>
+<body>
+	<nav>
+		<div class="logo">
+			<a href="#home"><p>MUSIC RECOMMENDATION SYSTEM</p></a>
+		</div>
+		<ul id="navig">
+			<li><a href="#home">home</a></li>
+			<li><a href="#rec">Recommendations</a></li>
+			<li><a href="#topartist">Music Player</a></li>
+			<li><a href="#topsongs">top songs</a></li>
+			<li><a href="https://newsroom.spotify.com/news/" target="_blank">news</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="accounts/logout">Logout</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+
+<section  id="home">
+	<h1 class="slide-bottom">WELCOME TO </h1>
+	<h1 class="slide-bottom">MUSIC RECOMMENDATION SYSTEM</h1>
+	<form action="{% url 'dashboard' %}" method="post">
+		{% csrf_token %}
+		<div class="subscribe">
+				<h2>SEARCH YOUR SONG HERE</h2>
+				<input type="text" class="form__email" placeholder="Enter song name" name="songs" id="search" />
+				<br>
+				<button class="form__button" type="submit" value="SEARCH" >SEARCH</button>	
+		</div>
+	</form>
+	<div style="color:antiquewhite;" >{{ msg }}</div>
+</section>
+	
+<section id="rec">
+		<h5 class="slide-bottom">RECOMMENDATIONS</h5>
+	<div class="cards" >
+			{% for items in data %}
+		<div class="col-lg-4">
+			<div class="card p-0">	
+				
+				<div class="card-image"> <img src="{{ items.image_url }}" alt=""> 
+				</div>
+		
+				<div class="card-content d-flex flex-column align-items-center">
+						<h4 class="pt-2">#{{ forloop.counter }}</h4>
+						<h5>{{items.names}}</h5>	
+				</div>
+			</div>
+		</div>
+			{% endfor %}
+	</div>	
+</section>
+		
+<section id="topartist">
+	<h5 class="slide-bottom">MUSIC PLAYER</h5>
+	<div class="main">
+		<!-- show_song_number -->
+		<div class="show_song_no">
+			<p id="present">1</p>
+			<p>/</p>
+			<p id="total">5</p>
+		</div>
+
+	    <!--- left part --->
+	    <div class="left">
+  
+		<!--- song img --->
+			<img id="track_image">
+			<div class="volume">
+				<p id="volume_show">90</p>
+				<i class="fa fa-volume-up" aria-hidden="true" onclick="mute_sound()" id="volume_icon"></i>
+				<input type="range" min="0" max="100" value="90" onchange="volume_change()" id="volume">  
+			</div>
+	    </div>
+   
+	    <!--- right part --->
+		<div class="right">
+
+			<!--- song title & artist name --->
+			<div class="song_detail">
+				<p id="title">title.mp3</p>
+				<p id="artist">Artist name</p>
+			</div>
+	
+			<!--- middle part --->
+			<div class="middle">
+				<button onclick="previous_song()" id="pre"><i class="fa fa-step-backward" aria-hidden="true"></i></button>
+				<button onclick="justplay()" id="play"><i class="fa fa-play" aria-hidden="true"></i></button>
+				<button onclick="next_song()" id="next"><i class="fa fa-step-forward" aria-hidden="true"></i></button>
+			</div>
+	
+			<!--- song duration part --->
+			<div class="duration">
+				<input type="range" min="0" max="100" value="0" id="duration_slider" onchange="change_duration()">
+				<button id="auto" onclick="autoplay_switch()">Auto &nbsp;<i class="fa fa-circle-o-notch" aria-hidden="true"></i></button>
+			</div>	 
+		</div>
+  	</div>
+	 
+	<!--- Add javascript file --->
+	<script src="{% static 'js/main.js' %}"></script>
+</section>
+
+<section id="topsongs">
+<h5 class="slide-bottom">TOP SONGS</h5>
+<a href="https://open.spotify.com/track/58Mh6zmqSo9IvysPAXnG0h?si=493f9320bc8d414e" target="_blank">
+<div class="cards">
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/1.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#1 </h4>
+				<h5>CHANGE YOUR MIND</h5>
+			</div>
+		</div>
+	</div>
+</a>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/2.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#2</h4>
+				<h5>SOULS THAT LEAVE US TO SOON </h5>
+			</div>
+		</div>
+	</div>
+	<a href="https://open.spotify.com/track/2nM7VjLc9rkb9c0WzoiwOA?si=6af2386fc63145e1" target="_blank">
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/3.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#3</h4>
+				<h5>HOLD SOMEBODY </h5>
+			</div>
+		</div>
+	</div>
+	</a>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/4.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#4</h4>
+				<h5>SOUR PATCH KIDS </h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/5.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#5</h4>
+				<h5>HEAT WAVES </h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/6.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#6</h4>
+				<h5>ENEMY </h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/7.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#7</h4>
+				<h5>LAST ONE STANDING </h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/8.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#8</h4>
+				<h5>IM USED TO IT </h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/9.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#9</h4>
+				<h5>SUPERCUTS </h5>
+			</div>
+		</div>
+	</div>
+	<a href="https://open.spotify.com/track/57RA3JGafJm5zRtKJiKPIm?si=41826a3f790f4670" target="_blank">
+	<div class="col-lg-4">
+		<div class="card p-0">
+			<div class="card-image"> <img src="{% static 'image/10.jfif' %}" alt=""> </div>
+			<div class="card-content d-flex flex-column align-items-center">
+				<h4 class="pt-2">#10</h4>
+				<h5>ARE YOU BORED YET </h5>
+			</div>
+		</div>
+	</div>
+</div>
+</a>
+</section>
+</body>
+</html>
